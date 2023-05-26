@@ -2,7 +2,9 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 import RegistrationScreen from "./Screens/Auth/RegistrationScreen";
-import LoginScreen from "./Screens/Auth/LoginScreen";
+// import LoginScreen from "./Screens/Auth/LoginScreen";
+// import PostsScreen from "./Screens/PostsScreen.jsx";
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     Appetite: require("./assets/fonts/appetite.ttf"),
@@ -14,7 +16,8 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <LoginScreen />
+      <RegistrationScreen />
+
       <StatusBar style="auto" />
     </View>
   );

@@ -52,16 +52,20 @@ const RegistrationScreen = () => {
             }}
           >
             <View style={styles.avatar}>
-              <Image />
-              <TouchableOpacity>
-                <Icon
-                  name="pluscircleo"
-                  color="#FF6C00"
-                  size={25}
-                  style={styles.icon}
-                />
-              </TouchableOpacity>
+              <Image
+                source={require("../../assets/photobg.jpg")}
+                style={styles.image}
+              />
             </View>
+
+            <TouchableOpacity>
+              <Icon
+                name="pluscircleo"
+                color="#FF6C00"
+                size={25}
+                style={styles.icon}
+              />
+            </TouchableOpacity>
             <Text style={styles.text}>Реєстрація</Text>
 
             <TextInput
@@ -157,12 +161,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(246, 246, 246, 1)",
   },
 
-  avatarImage: {},
+  image: {
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+  },
 
   icon: {
     position: "absolute",
-    top: 81,
-    right: -14,
+    top: 0,
+    right: 100,
+    zIndex: 1,
   },
 
   text: {
