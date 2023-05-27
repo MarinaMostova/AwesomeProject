@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -8,13 +8,31 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [focusedInput, setFocusedInput] = useState("");
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setIsKeyboardOpen(false);
+        setFocusedInput("");
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -23,73 +41,104 @@ const LoginScreen = () => {
   const handleEmailChange = (text) => {
     setEmail(text);
   };
-
   const handlePasswordChange = (text) => {
     setPassword(text);
   };
-  const dismissKeyboard = () => {
-    Keyboard.dismiss();
-    setIsKeyboardOpen(false);
+
+  const handleFocusInput = (name) => {
+    setFocusedInput(name);
+    setIsKeyboardOpen(true);
   };
+
+  const handleSubmit = () => {
+    if (email === "") {
+      Toast.show({
+        type: "error",
+        text1: "Введіть адресу електронної пошти! ",
+      });
+    } else if (password === "") {
+      Toast.show({
+        type: "error",
+        text1: "Введіть пароль! ",
+      });
+    } else {
+      const user = { email, password };
+      console.log(user);
+    }
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <ImageBackground
           source={require("../../assets/photobg.jpg")}
           style={styles.backgroundImage}
         >
-          <View style={styles.authContainer}>
-            <Text style={styles.text}>Увійти</Text>
-
-            <TextInput
-              placeholder="Адреса електронної пошти"
-              inputMode="email"
-              placeholderTextColor={"#BDBDBD"}
-              style={styles.input}
-              value={email}
-              onChangeText={handleEmailChange}
-              onFocus={() => {
-                setIsKeyboardOpen(true);
-              }}
-            />
-
-            <View style={styles.passwordContainer}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+            style={styles.keyboardView}
+          >
+            <View style={styles.authContainer}>
+              <Text style={styles.text}>Увійти </Text>
               <TextInput
-                placeholder="Пароль"
+                placeholder="Адреса електронної пошти"
+                inputMode="email"
                 placeholderTextColor={"#BDBDBD"}
-                secureTextEntry={!showPassword}
-                style={styles.input}
-                value={password}
-                onChangeText={handlePasswordChange}
+                style={[
+                  styles.input,
+                  focusedInput === "email" && styles.activeInput,
+                ]}
+                value={email}
+                onChangeText={handleEmailChange}
                 onFocus={() => {
-                  setIsKeyboardOpen(true);
+                  handleFocusInput("email");
                 }}
               />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  placeholder="Пароль"
+                  placeholderTextColor={"#BDBDBD"}
+                  secureTextEntry={!showPassword}
+                  style={[
+                    styles.input,
+                    focusedInput === "password" && styles.activeInput,
+                  ]}
+                  value={password}
+                  onChangeText={handlePasswordChange}
+                  onFocus={() => {
+                    handleFocusInput("password");
+                  }}
+                />
 
-              <TouchableOpacity
-                onPress={toggleShowPassword}
-                style={styles.showPassword}
-              >
-                <Text style={styles.showPasswordText}>
-                  {showPassword ? "Сховати" : "Показати"}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {!isKeyboardOpen && (
-              <View>
-                <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-                  <Text style={styles.buttonText}>Увійти</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity>
-                  <Text style={styles.link}>
-                    Немає акаунту? Зареєструватися
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={toggleShowPassword}
+                  style={styles.showPassword}
+                >
+                  <Text style={styles.showPasswordText}>
+                    {showPassword ? "Сховати" : "Показати"}
                   </Text>
                 </TouchableOpacity>
               </View>
-            )}
-          </View>
+              {!isKeyboardOpen && (
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.button}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={styles.buttonText}>Увійти</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity activeOpacity={0.8}>
+                    <Text style={styles.link}>
+                      Немає акаунту? Зареєструватися
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
@@ -107,6 +156,11 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
+    alignItems: "center",
+  },
+
+  keyboardView: {
+    flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -118,6 +172,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 16,
+    paddingBottom: 35,
   },
 
   text: {
@@ -143,6 +198,7 @@ const styles = StyleSheet.create({
 
   activeInput: {
     borderColor: "#FF6C00",
+    backgroundColor: "#FFFFFF",
   },
 
   button: {

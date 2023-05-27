@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -9,8 +9,11 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
+import Toast from "react-native-toast-message";
 
 const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
@@ -18,6 +21,21 @@ const RegistrationScreen = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [focusedInput, setFocusedInput] = useState("");
+
+  useEffect(() => {
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setIsKeyboardOpen(false);
+        setFocusedInput("");
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -33,96 +51,137 @@ const RegistrationScreen = () => {
     setPassword(text);
   };
 
-  const dismissKeyboard = () => {
-    Keyboard.dismiss();
-    setIsKeyboardOpen(false);
+  const handleFocusInput = (name) => {
+    setFocusedInput(name);
+    setIsKeyboardOpen(true);
+  };
+
+  const handleSubmit = () => {
+    if (login === "") {
+      Toast.show({
+        type: "error",
+        text1: "Введіть логін! ",
+      });
+    } else if (email === "") {
+      Toast.show({
+        type: "error",
+        text1: "Введіть адресу електронної пошти! ",
+      });
+    } else if (password === "") {
+      Toast.show({
+        type: "error",
+        text1: "Введіть пароль! ",
+      });
+    } else {
+      const user = { login, email, password };
+      console.log(user);
+    }
   };
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <ImageBackground
           source={require("../../assets/photobg.jpg")}
           style={styles.backgroundImage}
         >
-          <View
-            style={{
-              ...styles.authContainer,
-              paddingBottom: isKeyboardOpen ? 150 : 45,
-            }}
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+            style={styles.keyboardView}
           >
-            <View style={styles.avatar}>
-              <Image
-                source={require("../../assets/photobg.jpg")}
-                style={styles.image}
-              />
-            </View>
-
-            <TouchableOpacity>
-              <Icon
-                name="pluscircleo"
-                color="#FF6C00"
-                size={25}
-                style={styles.icon}
-              />
-            </TouchableOpacity>
-            <Text style={styles.text}>Реєстрація</Text>
-
-            <TextInput
-              placeholder="Логін"
-              placeholderTextColor={"#BDBDBD"}
-              style={styles.input}
-              value={login}
-              onChangeText={handleLoginChange}
-              onFocus={() => {
-                setIsKeyboardOpen(true);
+            <View
+              style={{
+                ...styles.authContainer,
+                paddingBottom: isKeyboardOpen ? 150 : 45,
               }}
-            />
-            <TextInput
-              placeholder="Адреса електронної пошти"
-              inputMode="email"
-              placeholderTextColor={"#BDBDBD"}
-              style={styles.input}
-              value={email}
-              onChangeText={handleEmailChange}
-              onFocus={() => {
-                setIsKeyboardOpen(true);
-              }}
-            />
-            <View style={styles.passwordContainer}>
+            >
+              <View style={styles.avatar}>
+                <Image
+                  // source={require("../../assets/photobg.jpg")}
+                  style={styles.image}
+                />
+              </View>
+
+              <TouchableOpacity activeOpacity={0.8}>
+                <Icon
+                  name="pluscircleo"
+                  color="#FF6C00"
+                  size={25}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+              <Text style={styles.text}>Реєстрація</Text>
+
               <TextInput
-                placeholder="Пароль"
+                placeholder="Логін"
                 placeholderTextColor={"#BDBDBD"}
-                secureTextEntry={!showPassword}
-                style={styles.input}
-                value={password}
-                onChangeText={handlePasswordChange}
+                style={[
+                  styles.input,
+                  focusedInput === "login" && styles.activeInput,
+                ]}
+                value={login}
+                onChangeText={handleLoginChange}
                 onFocus={() => {
-                  setIsKeyboardOpen(true);
+                  handleFocusInput("login");
                 }}
               />
-              <TouchableOpacity
-                onPress={toggleShowPassword}
-                style={styles.showPassword}
-              >
-                <Text style={styles.showPasswordText}>
-                  {showPassword ? "Сховати" : "Показати"}
-                </Text>
-              </TouchableOpacity>
-            </View>
-            {!isKeyboardOpen && (
-              <View>
-                <TouchableOpacity activeOpacity={0.8} style={styles.button}>
-                  <Text style={styles.buttonText}>Зареєстуватися</Text>
+              <TextInput
+                placeholder="Адреса електронної пошти"
+                inputMode="email"
+                placeholderTextColor={"#BDBDBD"}
+                style={[
+                  styles.input,
+                  focusedInput === "email" && styles.activeInput,
+                ]}
+                value={email}
+                onChangeText={handleEmailChange}
+                onFocus={() => {
+                  handleFocusInput("email");
+                }}
+              />
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  placeholder="Пароль"
+                  placeholderTextColor={"#BDBDBD"}
+                  secureTextEntry={!showPassword}
+                  style={[
+                    styles.input,
+                    focusedInput === "password" && styles.activeInput,
+                  ]}
+                  value={password}
+                  onChangeText={handlePasswordChange}
+                  onFocus={() => {
+                    handleFocusInput("password");
+                  }}
+                />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={toggleShowPassword}
+                  style={styles.showPassword}
+                >
+                  <Text style={styles.showPasswordText}>
+                    {showPassword ? "Сховати" : "Показати"}
+                  </Text>
                 </TouchableOpacity>
-                <View>
-                  <TouchableOpacity>
-                    <Text style={styles.link}>Вже є акаунт? Увійти</Text>
-                  </TouchableOpacity>
-                </View>
               </View>
-            )}
-          </View>
+              {!isKeyboardOpen && (
+                <View>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.button}
+                    onPress={handleSubmit}
+                  >
+                    <Text style={styles.buttonText}>Зареєстpуватися</Text>
+                  </TouchableOpacity>
+                  <View>
+                    <TouchableOpacity activeOpacity={0.8}>
+                      <Text style={styles.link}>Вже є акаунт? Увійти</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              )}
+            </View>
+          </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
@@ -132,12 +191,18 @@ const RegistrationScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "flex-end",
     width: "100%",
   },
 
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
+    alignItems: "center",
+  },
+
+  keyboardView: {
+    flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
   },
@@ -193,6 +258,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontFamily: "Appetite",
     marginBottom: 16,
+  },
+
+  activeInput: {
+    borderColor: "#FF6C00",
+    backgroundColor: "#FFFFFF",
   },
 
   button: {
