@@ -74,7 +74,7 @@ const RegistrationScreen = () => {
       });
     } else {
       const user = { login, email, password };
-      console.log(user);
+      console.log("Реєстрація. Користувач:", user);
     }
   };
 

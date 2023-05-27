@@ -63,7 +63,7 @@ const LoginScreen = () => {
       });
     } else {
       const user = { email, password };
-      console.log(user);
+      console.log("Вхід. Користувач:", user);
     }
   };
 
