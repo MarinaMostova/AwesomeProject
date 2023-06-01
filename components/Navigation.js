@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { RegistrationScreen, LoginScreen } from "../Screens/Auth";
-import { HomeScreen } from "../Screens/Main";
+import { HomeScreen, CommentsScreen, MapScreen } from "../Screens/Main";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +22,16 @@ const Navigation = () => {
         name="HomeScreen"
         component={HomeScreen}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Коментарі"
+        component={CommentsScreen}
+        // options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MapScreen"
+        component={MapScreen}
+        // options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

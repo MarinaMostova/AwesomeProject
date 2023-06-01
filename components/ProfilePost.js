@@ -42,9 +42,6 @@ const ProfilePost = () => {
 
 const styles = StyleSheet.create({
   container: {
-    // paddingTop: 32,
-    // paddingHorizontal: 20,
-    // alignItems: "center",
     marginBottom: 5,
   },
 

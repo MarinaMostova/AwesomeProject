@@ -1,6 +1,6 @@
 import { ScrollView, View, StyleSheet } from "react-native";
-import { User, Post } from "../../components";
 import { useNavigation } from "@react-navigation/native";
+import { User, Post } from "../../components";
 
 const PostsScreen = () => {
   const navigation = useNavigation();

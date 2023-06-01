@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Appetite",
   },
+
   email: {
     color: "#212121",
     fontSize: 12,

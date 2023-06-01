@@ -10,10 +10,10 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import Toast from "react-native-toast-message";
+import Icon from "react-native-vector-icons/Feather";
 
 const CreatePostsScreen = () => {
   const [name, setName] = useState("");
@@ -226,6 +226,7 @@ const styles = StyleSheet.create({
     marginLeft: 28,
     borderBottomWidth: 0,
   },
+  
   button: {
     height: 51,
     width: 343,

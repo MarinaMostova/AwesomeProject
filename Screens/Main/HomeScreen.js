@@ -1,9 +1,8 @@
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Feather";
 import { PostsScreen, CreatePostsScreen, ProfileScreen } from "../Main";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,7 +14,7 @@ function HomeScreen() {
       initialRouteName="Публікації"
       screenOptions={{
         tabBarActiveTintColor: "#e91e63",
-        tabBarStyle: { paddingTop: 5 },
+        tabBarStyle: { paddingTop: 15, height: 90, justifyContent: "center" },
       }}
     >
       <Tab.Screen
@@ -24,7 +23,6 @@ function HomeScreen() {
         options={{
           tabBarShowLabel: false,
           headerTitleStyle: { paddingBottom: 5, fontFamily: "Appetite" },
-          // headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Icon name="grid" color={color} size={size} />
           ),
@@ -43,7 +41,6 @@ function HomeScreen() {
         name="Cтворити публікацію"
         component={CreatePostsScreen}
         options={{
-          // headerShown: false,
           headerTitleStyle: { paddingBottom: 5, fontFamily: "Appetite" },
           tabBarShowLabel: false,
           tabBarStyle: { display: "none" },
@@ -66,9 +63,6 @@ function HomeScreen() {
               <Icon name="plus" color={"#fff"} size={24} />
             </TouchableOpacity>
           ),
-          // tabBarIcon: ({ color, size }) => (
-          //   <Icon name="plus" color={"#fff"} size={size} />
-          // ),
         }}
       />
       <Tab.Screen
