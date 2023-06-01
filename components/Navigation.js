@@ -1,4 +1,3 @@
-import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { RegistrationScreen, LoginScreen } from "../Screens/Auth";
 import { HomeScreen, CommentsScreen, MapScreen } from "../Screens/Main";
@@ -29,7 +28,7 @@ const Navigation = () => {
         // options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="MapScreen"
+        name="Мапа"
         component={MapScreen}
         // options={{ headerShown: false }}
       />

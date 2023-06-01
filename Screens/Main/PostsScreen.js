@@ -1,9 +1,7 @@
 import { ScrollView, View, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { User, Post } from "../../components";
 
 const PostsScreen = () => {
-  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <ScrollView style={styles.listContainer}>

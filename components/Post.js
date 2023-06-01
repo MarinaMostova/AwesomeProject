@@ -1,7 +1,11 @@
 import { Image, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import Icon from "react-native-vector-icons/Feather";
 
 const Post = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <Image
@@ -10,7 +14,10 @@ const Post = () => {
       />
       <Text style={styles.postName}>Ліс</Text>
       <View style={styles.postDescription}>
-        <TouchableOpacity style={styles.comment}>
+        <TouchableOpacity
+          style={styles.comment}
+          onPress={() => navigation.navigate("Коментарі")}
+        >
           <Icon
             name="message-circle"
             size={26}
@@ -20,7 +27,10 @@ const Post = () => {
           <Text style={styles.commentText}>0</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.city}>
+        <TouchableOpacity
+          style={styles.city}
+          onPress={() => navigation.navigate("Мапа")}
+        >
           <Icon name="map-pin" size={24} color="#BDBDBD" style={styles.icon} />
           <Text style={styles.cityText}>Ivano-Frankivs'k Region, Ukraine</Text>
         </TouchableOpacity>
