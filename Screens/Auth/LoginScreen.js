@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
@@ -20,6 +21,8 @@ const LoginScreen = () => {
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [focusedInput, setFocusedInput] = useState("");
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
       "keyboardDidHide",
@@ -38,25 +41,18 @@ const LoginScreen = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleEmailChange = (text) => {
-    setEmail(text);
-  };
-  const handlePasswordChange = (text) => {
-    setPassword(text);
-  };
-
   const handleFocusInput = (name) => {
     setFocusedInput(name);
     setIsKeyboardOpen(true);
   };
 
   const handleSubmit = () => {
-    if (email === "") {
+    if (!email) {
       Toast.show({
         type: "error",
         text1: "Введіть адресу електронної пошти! ",
       });
-    } else if (password === "") {
+    } else if (!password) {
       Toast.show({
         type: "error",
         text1: "Введіть пароль! ",
@@ -64,6 +60,7 @@ const LoginScreen = () => {
     } else {
       const user = { email, password };
       console.log("Вхід. Користувач:", user);
+      navigation.navigate("HomeScreen");
     }
   };
 
@@ -78,7 +75,12 @@ const LoginScreen = () => {
             behavior={Platform.OS == "ios" ? "padding" : "height"}
             style={styles.keyboardView}
           >
-            <View style={styles.authContainer}>
+            <View
+              style={{
+                ...styles.authContainer,
+                paddingBottom: isKeyboardOpen ? 90 : 45,
+              }}
+            >
               <Text style={styles.text}>Увійти </Text>
               <TextInput
                 placeholder="Адреса електронної пошти"
@@ -89,7 +91,7 @@ const LoginScreen = () => {
                   focusedInput === "email" && styles.activeInput,
                 ]}
                 value={email}
-                onChangeText={handleEmailChange}
+                onChangeText={setEmail}
                 onFocus={() => {
                   handleFocusInput("email");
                 }}
@@ -104,7 +106,7 @@ const LoginScreen = () => {
                     focusedInput === "password" && styles.activeInput,
                   ]}
                   value={password}
-                  onChangeText={handlePasswordChange}
+                  onChangeText={setPassword}
                   onFocus={() => {
                     handleFocusInput("password");
                   }}
@@ -130,7 +132,10 @@ const LoginScreen = () => {
                     <Text style={styles.buttonText}>Увійти</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity activeOpacity={0.8}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => navigation.navigate("Registration")}
+                  >
                     <Text style={styles.link}>
                       Немає акаунту? Зареєструватися
                     </Text>
@@ -190,9 +195,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: "#F6F6F6",
     borderRadius: 8,
-    borderColor: "#E8E8E8",
     borderWidth: 1,
-    fontFamily: "Appetite",
+    borderColor: "#E8E8E8",
     marginBottom: 16,
   },
 

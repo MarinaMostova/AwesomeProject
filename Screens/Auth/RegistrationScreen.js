@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import Toast from "react-native-toast-message";
 
@@ -22,6 +23,8 @@ const RegistrationScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [focusedInput, setFocusedInput] = useState("");
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const keyboardDidHideListener = Keyboard.addListener(
@@ -41,33 +44,23 @@ const RegistrationScreen = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleLoginChange = (text) => {
-    setLogin(text);
-  };
-  const handleEmailChange = (text) => {
-    setEmail(text);
-  };
-  const handlePasswordChange = (text) => {
-    setPassword(text);
-  };
-
   const handleFocusInput = (name) => {
     setFocusedInput(name);
     setIsKeyboardOpen(true);
   };
 
   const handleSubmit = () => {
-    if (login === "") {
+    if (!login) {
       Toast.show({
         type: "error",
         text1: "Введіть логін! ",
       });
-    } else if (email === "") {
+    } else if (!email) {
       Toast.show({
         type: "error",
         text1: "Введіть адресу електронної пошти! ",
       });
-    } else if (password === "") {
+    } else if (!password) {
       Toast.show({
         type: "error",
         text1: "Введіть пароль! ",
@@ -75,6 +68,7 @@ const RegistrationScreen = () => {
     } else {
       const user = { login, email, password };
       console.log("Реєстрація. Користувач:", user);
+      navigation.navigate("HomeScreen");
     }
   };
 
@@ -92,7 +86,7 @@ const RegistrationScreen = () => {
             <View
               style={{
                 ...styles.authContainer,
-                paddingBottom: isKeyboardOpen ? 150 : 45,
+                paddingBottom: isKeyboardOpen ? 200 : 45,
               }}
             >
               <View style={styles.avatar}>
@@ -120,7 +114,7 @@ const RegistrationScreen = () => {
                   focusedInput === "login" && styles.activeInput,
                 ]}
                 value={login}
-                onChangeText={handleLoginChange}
+                onChangeText={setLogin}
                 onFocus={() => {
                   handleFocusInput("login");
                 }}
@@ -134,7 +128,7 @@ const RegistrationScreen = () => {
                   focusedInput === "email" && styles.activeInput,
                 ]}
                 value={email}
-                onChangeText={handleEmailChange}
+                onChangeText={setEmail}
                 onFocus={() => {
                   handleFocusInput("email");
                 }}
@@ -149,7 +143,7 @@ const RegistrationScreen = () => {
                     focusedInput === "password" && styles.activeInput,
                   ]}
                   value={password}
-                  onChangeText={handlePasswordChange}
+                  onChangeText={setPassword}
                   onFocus={() => {
                     handleFocusInput("password");
                   }}
@@ -174,7 +168,10 @@ const RegistrationScreen = () => {
                     <Text style={styles.buttonText}>Зареєстpуватися</Text>
                   </TouchableOpacity>
                   <View>
-                    <TouchableOpacity activeOpacity={0.8}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => navigation.navigate("Login")}
+                    >
                       <Text style={styles.link}>Вже є акаунт? Увійти</Text>
                     </TouchableOpacity>
                   </View>
@@ -191,14 +188,15 @@ const RegistrationScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-end",
-    width: "100%",
+    backgroundColor: "fff",
+    alignItems: "center",
   },
 
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
     alignItems: "center",
+    width: "100%",
   },
 
   keyboardView: {
