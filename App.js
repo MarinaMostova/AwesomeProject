@@ -5,8 +5,6 @@ import { useFonts } from "expo-font";
 import Toast from "react-native-toast-message";
 import { Navigation } from "./components";
 
-const Stack = createStackNavigator();
-
 export default function App() {
   const [fontsLoaded] = useFonts({
     Appetite: require("./assets/fonts/appetite.ttf"),
@@ -19,7 +17,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Navigation />
-
       <Toast />
     </NavigationContainer>
   );

@@ -22,16 +22,8 @@ const Navigation = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="Коментарі"
-        component={CommentsScreen}
-        // options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Мапа"
-        component={MapScreen}
-        // options={{ headerShown: false }}
-      />
+      <Stack.Screen name="Коментарі" component={CommentsScreen} />
+      <Stack.Screen name="Мапа" component={MapScreen} />
     </Stack.Navigator>
   );
 };
